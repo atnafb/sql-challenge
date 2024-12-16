@@ -29,8 +29,29 @@ dept_name VARCHAR (30) NOT NULL
 -- DEPT MANAGER TABLE
 DROP TABLE IF EXISTS dept_manager;
 CREATE TABLE dept_manager(
-dept_no VARCHAR(20) NOT NULL,
-emp_no VARCHAR(20) NOT NULL,
-emp_no REFERENCES employees(emp_no), 
-dept_no REFERENCES departments(dept_no)
+dept_no VARCHAR(20) NOT NULL REFERENCES departments(dept_no),
+emp_no INT NOT NULL REFERENCES employees(emp_no),
+/* We can also define FOREIGN KEY constraints directly within the column definition:
+   FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
+   FOREIGN KEY (dept_no) REFERENCES departments(dept_no)
+*/
+-- Create a composite key to ensure the uniqueness of the combination of dept_no and emp_no
+PRIMARY KEY (dept_no, emp_no)  
+);
+
+-- CREATING dep_emp 
+DROP TABLE IF EXISTS dept_emp;
+CREATE TABLE dept_emp(
+emp_no INT REFERENCES employees(emp_no),
+dept_no VARCHAR(20) NOT NULL REFERENCES departments(dept_no), 
+PRIMARY KEY (emp_no, dept_no)  
 )
+
+-- SALARIES TABLE
+DROP TABLE IF EXISTS salaries;
+CREATE TABLE salaries(
+emp_no INT PRIMARY KEY, 
+salary INT,
+-- Foreign key that references emp_no in employees table
+FOREIGN KEY (emp_no) REFERENCES employees(emp_no)
+);
