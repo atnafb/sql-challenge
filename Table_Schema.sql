@@ -12,7 +12,7 @@ CREATE TABLE employees (
 emp_no INT PRIMARY KEY,
 emp_title_id VARCHAR(20) NOT NULL REFERENCES titles(title_id), -- Foreign Key that references the title_id from titles table
 birth_date VARCHAR(20), 
-first_name VARCHAR(30) NOT NULL, -- when I define the number of number for VactersR, I used reasonable a maximum 
+first_name VARCHAR(30) NOT NULL, -- when I define the number of number for VARCHAR, I used reasonable a maximum 
 								  -- length data integrity, storage enhancement and validation
 last_name VARCHAR(30) NOT NULL,
 sex VARCHAR(1) NOT NULL CONSTRAINT check_sex CHECK (sex IN ('M', 'F')), -- I used CHECK constraint to make only M and F are allowed
@@ -45,7 +45,7 @@ CREATE TABLE dept_emp(
 emp_no INT REFERENCES employees(emp_no),
 dept_no VARCHAR(20) NOT NULL REFERENCES departments(dept_no), 
 PRIMARY KEY (emp_no, dept_no)  
-)
+);
 
 -- SALARIES TABLE
 DROP TABLE IF EXISTS salaries;
@@ -55,3 +55,33 @@ salary INT,
 -- Foreign key that references emp_no in employees table
 FOREIGN KEY (emp_no) REFERENCES employees(emp_no)
 );
+
+-- LIST OF TABLES 
+SELECT * FROM titles;
+SELECT * FROM employees;
+SELECT * FROM departments;
+SELECT * FROM dept_manager;
+SELECT * FROM dept_emp;
+SELECT * FROM salaries;
+
+----- DATA ANALYSIS ----
+
+-- (1) List of employees along with employee number, last name, first name, and salary 
+SELECT e.emp_no, e.last_name, e.first_name, e.sex, s.salary 
+FROM employees AS e 
+INNER JOIN salaries AS s ON e.emp_no = s.emp_no;
+
+-- (2) List of employees who were hired in 1986, along with their first name and last name
+SELECT first_name, last_name, hire_date
+FROM employees 
+WHERE hire_date BETWEEN '1986-1-1' AND '1986-12-31';
+
+-- (3) List of department managers along with employee number, last name, first name and department name 
+
+SELECT d.dept_no, d.dept_name, e.emp_no, e.last_name, e.first_name
+FROM departments AS d
+LEFT JOIN dept_manager AS dm ON d.dept_no = dm.dept_no
+LEFT JOIN employees AS e ON dm.emp_no = e.emp_no;
+
+-- (4) 
+
